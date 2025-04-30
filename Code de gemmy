@@ -1,0 +1,496 @@
+from kivy.app import App
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.image import Image
+from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
+from kivy.clock import Clock
+from kivy.core.audio import SoundLoader
+
+class SplashScreen(Screen):
+    def on_enter(self):
+        layout = BoxLayout(orientation='vertical')
+        self.robot_image = Image(source='jimy_robot.png')
+        self.greeting = Label(text="مرحباً، أنا جيمي! سعيد بلقائك!", font_size='24sp')
+        layout.add_widget(self.robot_image)
+        layout.add_widget(self.greeting)
+        self.add_widget(layout)
+
+        sound = SoundLoader.load('welcome_arabic.mp3')
+        if sound:
+            sound.play()
+        Clock.schedule_once(self.go_to_language_screen, 5)
+
+    def go_to_language_screen(self, dt):
+        self.manager.current = 'language'                  from kivy.uix.button import Button
+
+class LanguageScreen(Screen):
+    def on_enter(self):
+        self.layout = BoxLayout(orientation='vertical', spacing=20, padding=40)
+
+        self.label = Label(text="اختر لغتك المفضلة", font_size='24sp')
+        self.layout.add_widget(self.label) 
+        arabic_button = Button(text="العربية", font_size='20sp', background_color=(0.1, 0.6, 0.3, 1))
+        arabic_button.bind(on_press=self.set_arabic)
+        self.layout.add_widget(arabic_button)
+
+        french_button = Button(text="Français", font_size='20sp', background_color=(0.1, 0.4, 0.8, 1))
+        french_button.bind(on_press=self.set_french)
+        self.layout.add_widget(french_button)
+
+        self.add_widget(self.layout)
+
+    def set_arabic(self, instance):
+        self.manager.language = 'arabic'
+        self.manager.current = 'main'
+
+    def set_french(self, instance):
+        self.manager.language = 'french'
+        self.manager.current = 'main'
+[24/04, 22:59] Bahija 2: from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.screenmanager import Screen
+from kivy.uix.scrollview import ScrollView
+
+class MainScreen(Screen):
+    def on_enter(self):
+        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=20)
+        
+        self.label = Label(text="مرحباً بك في برنامج جيمي!", font_size='24sp', size_hint=(1, 0.1))
+        self.layout.add_widget(self.label)
+        
+        # إضافة أزرار التعليم
+        button_layout = BoxLayout(orientation='horizontal', spacing=10, size_hint=(1, 0.9))
+        
+        button_harfs = Button(text="الحروف", font_size='20sp', background_color=(0.1, 0.8, 0.3, 1))
+        button_harfs.bind(on_press=self.go_to_harfs)
+        button_layout.add_widget(button_harfs)
+        
+        button_arqam = Button(text="الأرقام", font_size='20sp', background_color=(0.1, 0.4, 0.8, 1))
+        button_arqam.bind(on_press=self.go_to_arqam)
+        button_layout.add_widget(button_arqam)
+
+        button_alwan = Button(text="الألوان", font_size='20sp', background_color=(0.8, 0.8, 0.1, 1))
+        button_alwan.bind(on_press=self.go_to_alwan)
+        button_layout.add_widget(button_alwan)
+
+        button_aghani = Button(text="الأغاني", font_size='20sp', background_color=(0.9, 0.5, 0.2, 1))
+        button_aghani.bind(on_press=self.go_to_aghani)
+        button_layout.add_widget(button_aghani)
+        button_ask = Button(text="اسأل جيمي", font_size='20sp', background_color=(0.5, 0.5, 0.5, 1))
+        button_ask.bind(on_press=self.go_to_ask)
+        button_layout.add_widget(button_ask)
+        button_hisab = Button(text="الحساب", font_size='20sp', background_color=(0.1, 0.6, 0.8, 1))
+        button_hisab.bind(on_press=self.go_to_hisab)
+        button_layout.add_widget(button_hisab)
+     
+        self.layout.add_widget(button_layout)
+        self.add_widget(self.layout)
+    
+    def go_to_harfs(self, instance):
+        self.manager.current = 'harfs'
+
+    def go_to_arqam(self, instance):
+        self.manager.current = 'arqam'
+
+    def go_to_alwan(self, instance):
+        self.manager.current = 'alwan'
+
+    def go_to_aghani(self, instance):
+        self.manager.current = 'aghani'
+
+    def go_to_ask(self, instance):
+        self.manager.current = 'ask'
+
+    def go_to_hisab(self, instance):
+        self.manager.current = 'hisab'
+class AlwanScreen(Screen):
+    def on_enter(self):
+        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=20)
+
+        self.label = Label(text="تعلم الألوان", font_size='24sp', size_hint=(1, 0.1))
+        self.layout.add_widget(self.label)
+
+        # قائمة الألوان مع الصور والأمثلة
+        self.alwan_list = [
+            ('أحمر', 'red.png', 'تفاحة حمراء'),
+            ('أزرق', 'blue.png', 'بحر أزرق'),
+            ('أصفر', 'yellow.png', 'شمس صفراء'),
+            ('أخضر', 'green.png', 'شجرة خضراء'),
+            ('برتقالي', 'orange.png', 'برتقالة برتقالية'),
+            ('بنفسجي', 'purple.png', 'زهرة بنفسجية'),
+            ('وردي', 'pink.png', 'زهرة وردية'),
+            ('أسود', 'black.png', 'حذاء أسود'),
+            ('أبيض', 'white.png', 'ثلج أبيض'),
+            ('رمادي', 'gray.png', 'غيمة رمادية')
+        ]
+
+        for alwan, image_file, example in self.alwan_list:
+            button = Button(text=alwan, font_size='20sp', background_color=(0.5, 0.5, 0.5, 1))
+            button.bind(on_press=lambda instance, alwan=alwan, image_file=image_file, example=example: self.show_color_details(alwan, image_file, example))
+            self.layout.add_widget(button)
+
+        back_button = Button(text="العودة", font_size='20sp', background_color=(0.7, 0.7, 0.7, 1))
+        back_button.bind(on_press=self.go_back)
+        self.layout.add_widget(back_button)
+
+        self.add_widget(self.layout)
+
+    def show_color_details(self, alwan, image_file, example):
+       
+        self.label.text = f"اللون {alwan}: {example}"
+
+      
+        self.image = Image(source=image_file)
+        self.layout.add_widget(self.image)
+        engine.say(f"هذا هو اللون {alwan}. مثال: {example}")
+        engine.runAndWait()
+
+    def go_back(self, instance):
+        self.manager.current = 'main'
+import kivy
+from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.image import Image
+from kivy.uix.boxlayout import BoxLayout
+import pyttsx3  
+
+kivy.require('2.0.0')  
+
+# إعداد المحرك الصوتي
+engine = pyttsx3.init()
+
+class HarfScreen(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.orientation = 'vertical'
+
+        self.label = Label(text="تعلم الحروف", font_size='24sp', size_hint=(1, 0.1))
+        self.add_widget(self.label)
+
+        
+        self.harf_list = [
+            ('أ', 'a.png', 'أفكار'),
+            ('ب', 'b.png', 'بقرة'),
+            ('ت', 't.png', 'تفاحة'),
+            ('ث', 'th.png', 'ثوب'),
+            ('ج', 'j.png', 'جمل'),
+            ('ح', 'h.png', 'حمار'),
+            ('خ', 'kh.png', 'خروف'),
+            ('د', 'd.png', 'دب'),
+            ('ذ', 'dh.png', 'ذئب'),
+            ('ر', 'r.png', 'رجل'),
+            ('ز', 'z.png', 'زرافة'),
+            ('س', 's.png', 'سمك'),
+            ('ش', 'sh.png', 'شجرة'),
+            ('ص', 's1.png', 'صقر'),
+            ('ض', 'd1.png', 'ضفدع'),
+            ('ط', 't1.png', 'طائر'),
+            ('ظ', 'th1.png', 'ظرف'),
+            ('ع', '3.png', 'عصفور'),
+            ('غ', 'gh.png', 'غزال'),
+            ('ف', 'f.png', 'فيل'),
+            ('ق', 'q.png', 'قمر'),
+            ('ك', 'k.png', 'كوب'),
+            ('ل', 'l.png', 'لبن'),
+            ('م', 'm.png', 'موز'),
+            ('ن', 'n.png', 'نمر'),
+            ('ه', 'h1.png', 'هر'),
+            ('و', 'w.png', 'وردة'),
+            ('ي', 'y.png', 'يد')
+        ]
+
+        
+        for harf, image_file, example in self.harf_list:
+            button = Button(text=harf, font_size='20sp', background_color=(0.5, 0.5, 0.5, 1))
+            button.bind(on_press=lambda instance, harf=harf, image_file=image_file, example=example: self.show_harf_details(harf, image_file, example))
+            self.add_widget(button)
+
+    def show_harf_details(self, harf, image_file, example):
+        
+        self.label.text = f"الحرف {harf}: {example}"
+
+        
+        self.image = Image(source=image_file)
+        self.add_widget(self.image)
+
+        
+        engine.say(f"هذا هو الحرف {harf}. مثال: {example}")
+        engine.runAndWait()
+
+class MyApp(App):
+    def build(self):
+        return HarfScreen()
+
+if __name__ == '__main__':
+    MyApp().run()
+import kivy
+from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.image import Image
+from kivy.uix.boxlayout import BoxLayout
+import pyttsx3 
+
+kivy.require('2.0.0')
+
+
+engine = pyttsx3.init()
+
+class ArqamScreen(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.orientation = 'vertical'
+
+        self.label = Label(text="تعلم الأرقام", font_size='24sp', size_hint=(1, 0.1))
+        self.add_widget(self.label)
+
+        
+        self.arqam_list = [
+            ('1', 'one.png', 'تفاحة واحدة'),
+            ('2', 'two.png', 'تفاحتان'),
+            ('3', 'three.png', 'ثلاثة كرات'),
+            ('4', 'four.png', 'أربع سيارات'),
+            ('5', 'five.png', 'خمس أشجار'),
+            ('6', 'six.png', 'ستة أقلام'),
+            ('7', 'seven.png', 'سبع وردات'),
+            ('8', 'eight.png', 'ثمانية كتب'),
+            ('9', 'nine.png', 'تسعة طيور'),
+            ('10', 'ten.png', 'عشرة طائرات'),
+            ('11', 'eleven.png', 'إحدى عشر قطة'),
+            ('12', 'twelve.png', 'اثنا عشر فستان'),
+            ('13', 'thirteen.png', 'ثلاثة عشر زهرة'),
+            ('14', 'fourteen.png', 'أربعة عشر بندقية'),
+            ('15', 'fifteen.png', 'خمسة عشر صندوق'),
+            ('16', 'sixteen.png', 'ستة عشر كرة'),
+            ('17', 'seventeen.png', 'سبعة عشر وردة'),
+            ('18', 'eighteen.png', 'ثمانية عشر صندوق'),
+            ('19', 'nineteen.png', 'تسعة عشر طائر'),
+            ('20', 'twenty.png', 'عشرون عصفور'),
+            ('21', 'twenty_one.png', 'واحد وعشرون قلم'),
+            ('22', 'twenty_two.png', 'اثنان وعشرون زهرة'),
+            ('23', 'twenty_three.png', 'ثلاثة وعشرون شجرة'),
+            ('24', 'twenty_four.png', 'أربعة وعشرون كتاب'),
+            ('25', 'twenty_five.png', 'خمسة وعشرون سيارة'),
+            ('26', 'twenty_six.png', 'ستة وعشرون طائر'),
+            ('27', 'twenty_seven.png', 'سبعة وعشرون وردة'),
+            ('28', 'twenty_eight.png', 'ثمانية وعشرون كرة'),
+            ('29', 'twenty_nine.png', 'تسعة وعشرون حيوان'),
+            ('30', 'thirty.png', 'ثلاثون بيت')
+        ]
+
+        
+        for arqam, image_file, example in self.arqam_list:
+            button = Button(text=arqam, font_size='20sp', background_color=(0.5, 0.5, 0.5, 1))
+            button.bind(on_press=lambda instance, arqam=arqam, image_file=image_file, example=example: self.show_arqam_details(arqam, image_file, example))
+            self.add_widget(button)
+
+    def show_arqam_details(self, arqam, image_file, example):
+        
+        self.label.text = f"الرقم {arqam}: {example}"
+
+      
+        self.image = Image(source=image_file)
+        self.add_widget(self.image)
+
+        
+        engine.say(f"هذا هو الرقم {arqam}. مثال: {example}")
+        engine.runAndWait()
+
+
+class MyApp(App):
+    def build(self):
+        return ArqamScreen()
+
+if __name__ == '__main__':
+    MyApp().run()
+import kivy
+from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.popup import Popup
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.gridlayout import GridLayout
+
+kivy.require('1.11.1')
+
+
+questions_answers = [
+    ("ما هو لون السماء؟", "أزرق"),
+    ("كم عدد أيام الأسبوع؟", "سبعة"),
+    ("ما هو أكبر كوكب في النظام الشمسي؟", "المشتري"),
+    ("ما هو الحيوان الذي يطلق عليه ملك الغابة؟", "الأسد"),
+    ("ما هو اسم أكبر محيط في العالم؟", "المحيط الهادئ"),
+    ("ما هو اسم أشهر قارة؟", "أفريقيا"),
+    ("ما هو أطول نهر في العالم؟", "نهر النيل"),
+    ("من هو مؤسس شركة مايكروسوفت؟", "بيل جيتس"),
+    ("ما هو نوع الطيور الذي لا يطير؟", "النعامة"),
+    ("ما هي اللغة الرسمية في اليابان؟", "اليابانية"),
+    ("ما هي عاصمة فرنسا؟", "باريس"),
+    ("ما هو اسم البحر الذي يفصل بين أوروبا وآسيا؟", "البحر الأبيض المتوسط"),
+    ("كم عدد الكواكب في النظام الشمسي؟", "ثمانية"),
+    ("ما هي أعلى قمة جبلية في العالم؟", "جبل إيفرست"),
+    ("من هو أول شخص سار على سطح القمر؟", "نيل أرمسترونغ"),
+    ("ما هو أسرع حيوان بري؟", "الفهد"),
+    ("ما هو أقوى عضلة في جسم الإنسان؟", "عضلة الفك"),
+    ("ما هو الحيوان الذي يعيش في الصحراء ولا يشرب الماء؟", "الجمل"),
+    ("ما هو أكبر حيوان في العالم؟", "الحوت الأزرق"),
+    ("من هو مؤسس شركة أبل؟", "ستيف جوبز"),
+    ("ما هو الحيوان الذي يعيش في الماء ويغني؟", "الحوت"),
+    ("ما هي أكبر مدينة في العالم؟", "طوكيو"),
+    ("ما هو لون الدم؟", "أحمر"),
+    ("من هو أعظم لاعب كرة قدم في التاريخ؟", "بيليه"),
+    ("ما هي أسرع سيارة في العالم؟", "بوغاتي شيرون"),
+    ("ما هو أطول كائن حي على الأرض؟", "شجرة السكويا"),
+    ("ما هو اسم أكبر قارة في العالم؟", "آسيا"),
+    ("ما هو أصل كلمة "إنترنت"؟", "شبكة مدمجة"),
+    ("ما هو الكائن الحي الذي لا يموت؟", "قنديل البحر"),
+    ("من هو مؤسس الفيسبوك؟", "مارك زوكربيرج"),
+    ("ما هو اللون الذي يمتص الضوء بالكامل؟", "الأسود"),
+    ("كم عدد الألوان في قوس قزح؟", "سبعة"),
+    ("ما هو أقدم علم في العالم؟", "العلم المصري القديم"),
+    ("من هو مؤلف كتاب "هاري بوتر"؟", "جي. كيه. رولينغ"),
+    ("ما هو الحيوان الذي يشرب الماء أكثر من غيره؟", "الفيل"),
+    ("ما هو أكبر كائن حي على الأرض؟", "الحوت الأزرق"),
+    ("ما هو حيوان يلد صغيره وهو يعيش في الماء؟", "الدلفين"),
+    ("ما هو الكتاب الذي يحتوي على تعليمات السلامة؟", "دليل السلامة"),
+    ("من هو أكثر لاعب سجل أهدافًا في كرة القدم؟", "كريستيانو رونالدو"),
+    ("ما هو الطائر الذي يستطيع الطيران لمسافات طويلة؟", "اللقلق"),
+    ("من هو أكثر فريق فاز بالدوري الإنجليزي؟", "مانشستر يونايتد"),
+]
+
+class QuestionApp(App):
+    def build(self):
+        layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+
+        
+        button = Button(text="اسأل جيمي", size_hint=(None, None), size=(200, 50))
+        button.bind(on_press=self.show_question)
+        layout.add_widget(button)
+
+        return layout
+
+   
+    def show_question(self, instance):
+        # اختيار سؤال عشوائي
+        question, answer = questions_answers[0]
+
+        
+        question_popup = Popup(title="سؤال من جيمي",
+                               content=ScrollView(Label(text=question)),
+                               size_hint=(None, None), size=(400, 200))
+        question_popup.open()
+
+        
+        answer_popup = Popup(title="الإجابة",
+                             content=Label(text=f"الإجابة هي: {answer}"),
+                             size_hint=(None, None), size=(400, 200))
+        answer_popup.open()
+
+
+if __name__ == "__main__":
+    QuestionApp().run()
+[24/04, 22:59] Bahija 2: import time
+import pygame
+from tkinter import *
+from tkinter import messagebox
+
+# تهيئة نافذة التطبيق
+root = Tk()
+root.title("جيمي - التذكيرات")
+root.geometry("300x200")
+
+# تهيئة pygame مرة واحدة
+pygame.mixer.init()
+
+# تحميل الأصوات مرة واحدة
+sounds = {
+    "eat": "eat_sound.mp3",
+    "teeth": "teeth_sound.mp3",
+    "sleep": "sleep_sound.mp3"
+}
+
+def play_sound(sound_file):
+    try:
+        pygame.mixer.music.stop()  # إيقاف الصوت السابق
+        pygame.mixer.music.load(sound_file)
+        pygame.mixer.music.play()
+    except Exception as e:
+        messagebox.showerror("خطأ", f"تعذر تشغيل الملف الصوتي:\n{e}")
+
+def show_reminder(message, sound_key):
+    messagebox.showinfo("تذكير", message)
+    play_sound(sounds[sound_key])
+
+def remind_eat():
+    show_reminder("تذكر! حان وقت الأكل!", "eat")
+
+def remind_teeth():
+    show_reminder("تذكر! حان وقت تنظيف أسنانك!", "teeth")
+
+def remind_sleep():
+    show_reminder("تذكر! حان وقت النوم الآن!", "sleep")
+    root.after(2000, root.quit)
+
+# إنشاء الأزرار
+button_eat = Button(root, text="وقت الأكل", command=remind_eat)
+button_eat.pack(pady=10)
+
+button_teeth = Button(root, text="وقت تنظيف الأسنان", command=remind_teeth)
+button_teeth.pack(pady=10)
+
+button_sleep = Button(root, text="وقت النوم", command=remind_sleep)
+button_sleep.pack(pady=10)
+
+root.mainloop()
+ import pygame
+from tkinter import *
+from tkinter import messagebox
+import os
+
+root = Tk()
+root.title("جيمي - التذكيرات")
+
+# تهيئة الصوت
+pygame.mixer.init()
+
+def show_reminder(message, sound_file):
+    messagebox.showinfo("تذكير", message)
+    if os.path.exists(sound_file):
+        pygame.mixer.music.load(sound_file)
+        pygame.mixer.music.play()
+    else:
+        messagebox.showerror("خطأ", f"ملف الصوت '{sound_file}' غير موجود.")
+
+def remind_eat():
+    show_reminder("تذكر! حان وقت الأكل!", "eat_sound.mp3")
+    # تذكير تلقائي بعد 3 ساعات (3 * 60 * 60 * 1000 ميلي ثانية)
+    root.after(3 * 60 * 60 * 1000, remind_eat)
+
+def remind_teeth():
+    show_reminder("تذكر! حان وقت تنظيف أسنانك!", "teeth_sound.mp3")
+    # تذكير تلقائي بعد 12 ساعة
+    root.after(12 * 60 * 60 * 1000, remind_teeth)
+
+def remind_sleep():
+    show_reminder("تذكر! حان وقت النوم الآن!", "sleep_sound.mp3")
+    root.after(24 * 60 * 60 * 1000, remind_sleep)
+
+# أزرار يدوية للتجربة أو الاستخدام الفوري
+button_eat = Button(root, text="وقت الأكل", command=remind_eat)
+button_eat.pack(pady=10)
+
+button_teeth = Button(root, text="وقت تنظيف الأسنان", command=remind_teeth)
+button_teeth.pack(pady=10)
+
+button_sleep = Button(root, text="وقت النوم", command=remind_sleep)
+button_sleep.pack(pady=10)
+
+# بدء التذكيرات التلقائية بعد بداية البرنامج مباشرة
+root.after(5000, remind_eat)    # يبدأ بعد 5 ثوانٍ فقط للتجربة
+root.after(10000, remind_teeth) # يبدأ بعد 10 ثوانٍ
+root.after(15000, remind_sleep) # يبدأ بعد 15 ثانية
+
+root.mainloop()
